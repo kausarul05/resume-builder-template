@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button";
 
 export default function ResumeBuilder() {
     // Form state
-    const [firstName, setFirstName] = useState("Kausar");
-    const [lastName, setLastName] = useState("Islam");
-    const [city, setCity] = useState("Mymensingh");
-    const [postalCode, setPostalCode] = useState("2220");
-    const [country, setCountry] = useState("Bangladesh");
-    const [phone, setPhone] = useState("+8801868703130");
-    const [email, setEmail] = useState("kauserulislam0055@gmail.com");
+    const [firstName, setFirstName] = useState("First Name");
+    const [lastName, setLastName] = useState("last Name");
+    const [city, setCity] = useState("City");
+    const [postalCode, setPostalCode] = useState("Postal Code");
+    const [country, setCountry] = useState("Country");
+    const [phone, setPhone] = useState("Phone");
+    const [email, setEmail] = useState("Email");
 
     return (
         <div className="bg-gray-50">
@@ -29,8 +29,9 @@ export default function ResumeBuilder() {
                                 <label className="block text-sm font-semibold mb-1">First Name</label>
                                 <input
                                     type="text"
-                                    value={firstName}
+                                    // value={firstName}
                                     onChange={(e) => setFirstName(e.target.value)}
+                                    placeholder="Enter your first name"
                                     className="w-full border border-gray-300 rounded px-3 py-2"
                                 />
                             </div>
