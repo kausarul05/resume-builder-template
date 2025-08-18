@@ -2,260 +2,208 @@ import React from "react";
 import { Phone, Mail, Globe, MapPin } from "lucide-react";
 
 type Resume = {
-    firstName: string;
-    lastName: string;
-    jobTitle: string;
-    city: string;
-    postalCode: string;
-    country: string;
-    phone: string;
-    email: string;
-    website: string;
-    photo: string | null; // Match the type from page.tsx
-    degree: string;
-    university: string;
-    eduYear: string;
-    exp1Title: string;
-    exp1Company: string;
-    exp1Year: string;
-    exp1Desc: string[];
-    exp2Title: string;
-    exp2Company: string;
-    exp2Year: string;
-    exp2Desc: string[];
-    skills: string[];
-    project1: { title: string; desc: string };
-    project2: { title: string; desc: string };
-    achievement: string;
+  firstName: string;
+  lastName: string;
+  jobTitle: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  phone: string;
+  email: string;
+  website: string;
+  photo: string | null;
+  degree: string;
+  university: string;
+  eduYear: string;
+  exp1Title: string;
+  exp1Company: string;
+  exp1Year: string;
+  exp1Desc: string[];
+  exp2Title: string;
+  exp2Company: string;
+  exp2Year: string;
+  exp2Desc: string[];
+  skills: string[];
+  project1: { title: string; desc: string };
+  project2: { title: string; desc: string };
+  achievement: string;
 };
 
 type Props = {
-    resume: Resume;
-    show: Show;
+  resume: Resume;
+  show: Show;
 };
 
 type Show = {
-    education: boolean;
-    experience: boolean;
-    skills: boolean;
-    projects: boolean;
-    achievements: boolean;
+  education: boolean;
+  experience: boolean;
+  skills: boolean;
+  projects: boolean;
+  achievements: boolean;
 };
 
-function getPhotoUrl(photo: string | File | null) {
-    if (!photo) return "/images/profile-placeholder.png";
-    if (typeof photo === "string") return photo;
-    return URL.createObjectURL(photo);
+function getPhotoUrl(photo: string | null) {
+  if (!photo) return "/images/profile-placeholder.png";
+  return photo;
 }
 
 export default function ResumePreview({ resume, show }: Props) {
-    // Placeholders for empty sections
-    const placeholders = {
-        education: {
-            degree: "e.g. BSc in Computer Science",
-            university: "e.g. Renowned University",
-            eduYear: "e.g. 2015 - 2020",
-        },
-        experience: {
-            title: "e.g. Front-end Developer",
-            company: "e.g. Tech Company",
-            year: "e.g. 2021 - Present",
-            desc: ["Describe your responsibilities or achievements"],
-        },
-        skills: ["e.g. HTML", "CSS", "JavaScript"],
-        projects: [
-            { title: "e.g. Portfolio Website", desc: "Personal portfolio showcasing projects and skills" },
-            { title: "e.g. E-commerce Site", desc: "Online store with a custom shopping cart" },
-        ],
-        achievement: "e.g. Winner of Hackathon 2022",
-    };
-
-    return (
-        <div className="flex flex-col h-full">
-            {/* Header */}
-            <div className="bg-[#25304B] px-8 py-8 flex items-center justify-between rounded-t">
-                <div>
-                    <h2 className="text-4xl font-extrabold text-white tracking-wide">
-                        {(resume.firstName || "First Name") + " " + (resume.lastName || "Last Name")}
-                    </h2>
-                    <p className="text-lg text-blue-100 mt-2">
-                        {resume.jobTitle || "Job Title"}
-                    </p>
-                </div>
-                <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center overflow-hidden border-4 border-[#25304B]">
-                    <img
-                        src={getPhotoUrl(resume.photo)}
-                        alt="Profile"
-                        className="w-full h-full object-cover"
-                    />
-                </div>
-            </div>
-            {/* Main Content */}
-            <div className="flex-1 flex flex-col lg:flex-row px-8 py-8 gap-8">
-                {/* Left Column */}
-                <div className="flex-1 space-y-8">
-                    {/* Education */}
-                    <div>
-                        <h3 className="text-[#25304B] font-bold text-lg tracking-wide mb-2">EDUCATION</h3>
-                        {(show.education || true) && (
-                            <div className={show.education ? "" : "opacity-50"}>
-                                <p className="font-semibold">
-                                    {resume.degree || placeholders.education.degree}
-                                </p>
-                                <p className="text-gray-700">
-                                    {resume.university || placeholders.education.university}
-                                </p>
-                                <p className="text-gray-500 text-sm">
-                                    {resume.eduYear || placeholders.education.eduYear}
-                                </p>
-                            </div>
-                        )}
-                    </div>
-                    {/* Experience */}
-                    <div>
-                        <h3 className="text-[#25304B] font-bold text-lg tracking-wide mb-2">EXPERIENCE</h3>
-                        {(show.experience || true) && (
-                            <>
-                                <div className={resume.exp1Title ? "" : "opacity-50"}>
-                                    <p className="font-semibold">
-                                        {resume.exp1Title || placeholders.experience.title}
-                                    </p>
-                                    <p className="text-gray-700">
-                                        {resume.exp1Company || placeholders.experience.company}
-                                    </p>
-                                    <p className="text-gray-500 text-sm">
-                                        {resume.exp1Year || placeholders.experience.year}
-                                    </p>
-                                    <ul className="list-disc ml-5 text-gray-700 text-sm mt-1 space-y-1">
-                                        {(resume.exp1Desc.length > 0 && resume.exp1Desc.some(Boolean)
-                                            ? resume.exp1Desc
-                                            : placeholders.experience.desc
-                                        ).map((desc, i) =>
-                                            desc ? <li key={i}>{desc}</li> : null
-                                        )}
-                                    </ul>
-                                </div>
-                                <div className={resume.exp2Title ? "mt-4" : "mt-4 opacity-50"}>
-                                    <p className="font-semibold">
-                                        {resume.exp2Title || placeholders.experience.title}
-                                    </p>
-                                    <p className="text-gray-700">
-                                        {resume.exp2Company || placeholders.experience.company}
-                                    </p>
-                                    <p className="text-gray-500 text-sm">
-                                        {resume.exp2Year || placeholders.experience.year}
-                                    </p>
-                                    <ul className="list-disc ml-5 text-gray-700 text-sm mt-1 space-y-1">
-                                        {(resume.exp2Desc.length > 0 && resume.exp2Desc.some(Boolean)
-                                            ? resume.exp2Desc
-                                            : placeholders.experience.desc
-                                        ).map((desc, i) =>
-                                            desc ? <li key={i}>{desc}</li> : null
-                                        )}
-                                    </ul>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                    {/* Projects */}
-                    <div>
-                        <h3 className="text-[#25304B] font-bold text-lg tracking-wide mb-2">PROJECTS</h3>
-                        {(show.projects || true) && (
-                            <>
-                                <div className={resume.project1.title ? "" : "opacity-50"}>
-                                    <p className="font-semibold">
-                                        {resume.project1.title || placeholders.projects[0].title}
-                                    </p>
-                                    <p className="text-gray-700 text-sm">
-                                        {resume.project1.desc || placeholders.projects[0].desc}
-                                    </p>
-                                </div>
-                                <div className={resume.project2.title ? "mt-2" : "mt-2 opacity-50"}>
-                                    <p className="font-semibold">
-                                        {resume.project2.title || placeholders.projects[1].title}
-                                    </p>
-                                    <p className="text-gray-700 text-sm">
-                                        {resume.project2.desc || placeholders.projects[1].desc}
-                                    </p>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                </div>
-                {/* Right Column */}
-                <div className="w-full lg:w-72 flex-shrink-0 space-y-8">
-                    {/* Contact */}
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-gray-700 text-sm opacity-100">
-                            <Phone className="w-4 h-4 text-[#25304B]" />
-                            <span>{resume.phone || "e.g. +1234567890"}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-700 text-sm opacity-100">
-                            <Mail className="w-4 h-4 text-[#25304B]" />
-                            <span>{resume.email || "e.g. hello@email.com"}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-700 text-sm opacity-100">
-                            <Globe className="w-4 h-4 text-[#25304B]" />
-                            <a
-                                href={resume.website || "#"}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:underline"
-                            >
-                                {resume.website || "e.g. www.example.com"}
-                            </a>
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-700 text-sm opacity-100">
-                            <MapPin className="w-4 h-4 text-[#25304B]" />
-                            <span>
-                                {(resume.city || "City") +
-                                    ((resume.city || resume.country) ? ", " : "") +
-                                    (resume.country || "Country") +
-                                    (resume.postalCode ? ` ${resume.postalCode}` : "")}
-                            </span>
-                        </div>
-                    </div>
-                    {/* Skills */}
-                    <div>
-                        <h3 className="text-[#25304B] font-bold text-lg tracking-wide mb-2">SKILLS</h3>
-                        <ul className={`list-none space-y-1 text-gray-700 text-sm ${show.skills ? "" : "opacity-50"}`}>
-                            {(resume.skills.length > 0 && resume.skills.some(Boolean)
-                                ? resume.skills
-                                : placeholders.skills
-                            ).map((skill, i) =>
-                                skill ? <li key={i}>{skill}</li> : null
-                            )}
-                        </ul>
-                    </div>
-                    {/* Projects (right column) */}
-                    <div>
-                        <h3 className="text-[#25304B] font-bold text-lg tracking-wide mb-2">PROJECTS</h3>
-                        <div className={resume.project1.title ? "" : "opacity-50"}>
-                            <p className="font-semibold">
-                                {resume.project1.title || placeholders.projects[0].title}
-                            </p>
-                            <p className="text-gray-700 text-sm">
-                                {resume.project1.desc || placeholders.projects[0].desc}
-                            </p>
-                        </div>
-                        <div className={resume.project2.title ? "mt-2" : "mt-2 opacity-50"}>
-                            <p className="font-semibold">
-                                {resume.project2.title || placeholders.projects[1].title}
-                            </p>
-                            <p className="text-gray-700 text-sm">
-                                {resume.project2.desc || placeholders.projects[1].desc}
-                            </p>
-                        </div>
-                    </div>
-                    {/* Achievements */}
-                    <div>
-                        <h3 className="text-[#25304B] font-bold text-lg tracking-wide mb-2">ACHIEVEMENTS</h3>
-                        <p className={`text-gray-700 text-sm ${show.achievements ? "" : "opacity-50"}`}>
-                            {resume.achievement || placeholders.achievement}
-                        </p>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="max-w-4xl mx-auto bg-white shadow-lg border border-gray-200 rounded-md overflow-hidden font-sans">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row items-center md:items-start px-8 py-6 border-b border-gray-300 bg-gray-50">
+        {/* Photo */}
+        <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-gray-200 shadow-sm">
+          <img
+            src={getPhotoUrl(resume.photo)}
+            alt="Profile"
+            className="w-full h-full object-cover"
+          />
         </div>
-    );
+        {/* Info */}
+        <div className="flex-1 mt-4 md:mt-0 md:ml-6 text-center md:text-left">
+          <h1 className="text-3xl font-bold text-gray-900">
+            {(resume.firstName || "First") + " " + (resume.lastName || "Last")}
+          </h1>
+          <p className="text-lg text-gray-600 font-medium">
+            {resume.jobTitle || "Job Title"}
+          </p>
+          <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-gray-700 mt-3">
+            <div className="flex items-center gap-1">
+              <Phone className="w-4 h-4 text-gray-500" />
+              <span>{resume.phone || "+123456789"}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Mail className="w-4 h-4 text-gray-500" />
+              <span>{resume.email || "hello@email.com"}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Globe className="w-4 h-4 text-gray-500" />
+              <span>{resume.website || "www.example.com"}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <MapPin className="w-4 h-4 text-gray-500" />
+              <span>
+                {(resume.city || "City") + ", " + (resume.country || "Country")}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-8 py-8">
+        {/* Left Sidebar */}
+        <div className="space-y-6 md:col-span-1">
+          {/* Skills */}
+          {show.skills && (
+            <section>
+              <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-1">
+                Skills
+              </h2>
+              <ul className="flex flex-wrap gap-2 mt-2 text-sm">
+                {(resume.skills.length > 0 ? resume.skills : ["HTML", "CSS", "JavaScript"]).map(
+                  (skill, i) => (
+                    <li
+                      key={i}
+                      className="bg-gray-100 px-2 py-1 rounded-md text-gray-700"
+                    >
+                      {skill}
+                    </li>
+                  )
+                )}
+              </ul>
+            </section>
+          )}
+
+          {/* Achievements */}
+          {show.achievements && (
+            <section>
+              <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-1">
+                Achievements
+              </h2>
+              <p className="text-sm text-gray-700 mt-2">
+                {resume.achievement || "Winner of Hackathon 2022"}
+              </p>
+            </section>
+          )}
+        </div>
+
+        {/* Main Content */}
+        <div className="space-y-6 md:col-span-2">
+          {/* Education */}
+          {show.education && (
+            <section>
+              <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-1">
+                Education
+              </h2>
+              <div className="mt-2">
+                <p className="font-medium text-gray-900">
+                  {resume.degree || "BSc in Computer Science"}
+                </p>
+                <p className="text-sm text-gray-700">
+                  {resume.university || "Renowned University"}
+                </p>
+                <p className="text-xs text-gray-500">
+                  {resume.eduYear || "2015 - 2020"}
+                </p>
+              </div>
+            </section>
+          )}
+
+          {/* Experience */}
+          {show.experience && (
+            <section>
+              <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-1">
+                Experience
+              </h2>
+              {[1, 2].map((i) => {
+                const expTitle =
+                  resume[`exp${i}Title` as keyof Resume] as string;
+                const expCompany =
+                  resume[`exp${i}Company` as keyof Resume] as string;
+                const expYear =
+                  resume[`exp${i}Year` as keyof Resume] as string;
+                const expDesc =
+                  resume[`exp${i}Desc` as keyof Resume] as string[];
+
+                return (
+                  <div key={i} className="mt-3">
+                    <p className="font-medium text-gray-900">
+                      {expTitle || "Front-end Developer"} |{" "}
+                      {expCompany || "Tech Company"}
+                    </p>
+                    <p className="text-xs text-gray-500">{expYear || "2021 - Present"}</p>
+                    <ul className="list-disc list-inside text-sm text-gray-700 mt-1">
+                      {(expDesc && expDesc.length > 0
+                        ? expDesc
+                        : ["Describe your role and achievements..."]
+                      ).map((desc, idx) => (
+                        <li key={idx}>{desc}</li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })}
+            </section>
+          )}
+
+          {/* Projects */}
+          {show.projects && (
+            <section>
+              <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-1">
+                Projects
+              </h2>
+              {[resume.project1, resume.project2].map((p, i) => (
+                <div key={i} className="mt-2">
+                  <p className="font-medium text-gray-900">{p.title || "Project Name"}</p>
+                  <p className="text-sm text-gray-700">{p.desc || "Project description goes here..."}</p>
+                </div>
+              ))}
+            </section>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
