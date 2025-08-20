@@ -29,11 +29,6 @@ type Resume = {
   achievement: string;
 };
 
-type Props = {
-  resume: Resume;
-  show: Show;
-};
-
 type Show = {
   education: boolean;
   experience: boolean;
@@ -42,14 +37,21 @@ type Show = {
   achievements: boolean;
 };
 
+type Props = {
+  resume: Resume;
+  show: Show;
+  template?: 1 | 2 | 3;
+};
+
 function getPhotoUrl(photo: string | null) {
   if (!photo) return "/images/profile-placeholder.png";
   return photo;
 }
 
-export default function ResumePreview({ resume, show }: Props) {
+// --- Template 1 (Original) ---
+function ResumeTemplate1({ resume, show }: Omit<Props, "template">) {
   return (
-    <div className="max-w-4xl mx-auto bg-white shadow-lg border border-gray-200 rounded-md overflow-hidden font-sans">
+    <div className="max-w-4xl mx-auto bg-white shadow-lg border border-gray-200 rounded-md overflow-hidden font-sans animate-fade-in">
       {/* Header */}
       <div className="flex flex-col md:flex-row items-center md:items-start px-8 py-6 border-b border-gray-300 bg-gray-50">
         {/* Photo */}
@@ -90,7 +92,6 @@ export default function ResumePreview({ resume, show }: Props) {
           </div>
         </div>
       </div>
-
       {/* Body */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-8 py-8">
         {/* Left Sidebar */}
@@ -115,7 +116,6 @@ export default function ResumePreview({ resume, show }: Props) {
               </ul>
             </section>
           )}
-
           {/* Achievements */}
           {show.achievements && (
             <section>
@@ -128,7 +128,6 @@ export default function ResumePreview({ resume, show }: Props) {
             </section>
           )}
         </div>
-
         {/* Main Content */}
         <div className="space-y-6 md:col-span-2">
           {/* Education */}
@@ -150,7 +149,6 @@ export default function ResumePreview({ resume, show }: Props) {
               </div>
             </section>
           )}
-
           {/* Experience */}
           {show.experience && (
             <section>
@@ -166,7 +164,6 @@ export default function ResumePreview({ resume, show }: Props) {
                   resume[`exp${i}Year` as keyof Resume] as string;
                 const expDesc =
                   resume[`exp${i}Desc` as keyof Resume] as string[];
-
                 return (
                   <div key={i} className="mt-3">
                     <p className="font-medium text-gray-900">
@@ -187,7 +184,6 @@ export default function ResumePreview({ resume, show }: Props) {
               })}
             </section>
           )}
-
           {/* Projects */}
           {show.projects && (
             <section>
@@ -207,3 +203,184 @@ export default function ResumePreview({ resume, show }: Props) {
     </div>
   );
 }
+
+// --- Template 2 (Simple Centered) ---
+function ResumeTemplate2({ resume, show }: Omit<Props, "template">) {
+  return (
+    <div className="max-w-3xl mx-auto bg-gray-50 shadow-md border border-gray-300 rounded-lg p-8 font-sans animate-fade-in">
+      <div className="flex flex-col items-center">
+        <img
+          src={getPhotoUrl(resume.photo)}
+          alt="Profile"
+          className="w-24 h-24 rounded-full border-2 border-gray-300 mb-3"
+        />
+        <h1 className="text-2xl font-bold">{resume.firstName} {resume.lastName}</h1>
+        <p className="text-gray-600">{resume.jobTitle}</p>
+        <div className="flex gap-4 mt-2 text-sm text-gray-700">
+          <span><Phone className="inline w-4 h-4" /> {resume.phone}</span>
+          <span><Mail className="inline w-4 h-4" /> {resume.email}</span>
+        </div>
+      </div>
+      <div className="mt-6 grid grid-cols-2 gap-6">
+        {show.education && (
+          <div>
+            <h2 className="font-semibold text-gray-800 border-b pb-1">Education</h2>
+            <p className="mt-2">{resume.degree} - {resume.university}</p>
+            <p className="text-xs text-gray-500">{resume.eduYear}</p>
+          </div>
+        )}
+        {show.skills && (
+          <div>
+            <h2 className="font-semibold text-gray-800 border-b pb-1">Skills</h2>
+            <ul className="flex flex-wrap gap-2 mt-2 text-sm">
+              {(resume.skills.length > 0 ? resume.skills : ["HTML", "CSS", "JavaScript"]).map(
+                (skill, i) => (
+                  <li key={i} className="bg-gray-200 px-2 py-1 rounded">{skill}</li>
+                )
+              )}
+            </ul>
+          </div>
+        )}
+      </div>
+      {show.experience && (
+        <div className="mt-6">
+          <h2 className="font-semibold text-gray-800 border-b pb-1">Experience</h2>
+          {[1, 2].map((i) => {
+            const expTitle = resume[`exp${i}Title` as keyof Resume] as string;
+            const expCompany = resume[`exp${i}Company` as keyof Resume] as string;
+            const expYear = resume[`exp${i}Year` as keyof Resume] as string;
+            const expDesc = resume[`exp${i}Desc` as keyof Resume] as string[];
+            return (
+              <div key={i} className="mt-2">
+                <p className="font-medium">{expTitle} | {expCompany}</p>
+                <p className="text-xs text-gray-500">{expYear}</p>
+                <ul className="list-disc list-inside text-sm text-gray-700">
+                  {(expDesc && expDesc.length > 0 ? expDesc : ["Describe your role..."]).map((desc, idx) => (
+                    <li key={idx}>{desc}</li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {show.projects && (
+        <div className="mt-6">
+          <h2 className="font-semibold text-gray-800 border-b pb-1">Projects</h2>
+          {[resume.project1, resume.project2].map((p, i) => (
+            <div key={i} className="mt-2">
+              <p className="font-medium">{p.title}</p>
+              <p className="text-sm">{p.desc}</p>
+            </div>
+          ))}
+        </div>
+      )}
+      {show.achievements && (
+        <div className="mt-6">
+          <h2 className="font-semibold text-gray-800 border-b pb-1">Achievements</h2>
+          <p className="text-sm mt-2">{resume.achievement}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// --- Template 3 (Sidebar Layout) ---
+function ResumeTemplate3({ resume, show }: Omit<Props, "template">) {
+  return (
+    <div className="max-w-4xl mx-auto bg-white shadow-xl border border-gray-200 rounded-lg overflow-hidden font-sans flex animate-fade-in">
+      {/* Sidebar */}
+      <div className="w-1/3 bg-gray-900 text-white p-8 flex flex-col items-center">
+        <img
+          src={getPhotoUrl(resume.photo)}
+          alt="Profile"
+          className="w-24 h-24 rounded-full border-4 border-white mb-4"
+        />
+        <h1 className="text-xl font-bold">{resume.firstName} {resume.lastName}</h1>
+        <p className="text-gray-300">{resume.jobTitle}</p>
+        <div className="mt-6 space-y-2 text-sm">
+          <div className="flex items-center gap-2"><Phone className="w-4 h-4" /> {resume.phone}</div>
+          <div className="flex items-center gap-2"><Mail className="w-4 h-4" /> {resume.email}</div>
+          <div className="flex items-center gap-2"><Globe className="w-4 h-4" /> {resume.website}</div>
+          <div className="flex items-center gap-2"><MapPin className="w-4 h-4" /> {resume.city}, {resume.country}</div>
+        </div>
+        {show.skills && (
+          <div className="mt-8 w-full">
+            <h2 className="font-semibold border-b border-gray-700 pb-1">Skills</h2>
+            <ul className="flex flex-wrap gap-2 mt-2 text-xs">
+              {(resume.skills.length > 0 ? resume.skills : ["HTML", "CSS", "JavaScript"]).map(
+                (skill, i) => (
+                  <li key={i} className="bg-gray-800 px-2 py-1 rounded">{skill}</li>
+                )
+              )}
+            </ul>
+          </div>
+        )}
+        {show.achievements && (
+          <div className="mt-8 w-full">
+            <h2 className="font-semibold border-b border-gray-700 pb-1">Achievements</h2>
+            <p className="text-xs mt-2">{resume.achievement}</p>
+          </div>
+        )}
+      </div>
+      {/* Main Content */}
+      <div className="flex-1 p-10 space-y-8">
+        {show.education && (
+          <section>
+            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-1">Education</h2>
+            <div className="mt-2">
+              <p className="font-medium">{resume.degree}</p>
+              <p className="text-sm">{resume.university}</p>
+              <p className="text-xs text-gray-500">{resume.eduYear}</p>
+            </div>
+          </section>
+        )}
+        {show.experience && (
+          <section>
+            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-1">Experience</h2>
+            {[1, 2].map((i) => {
+              const expTitle = resume[`exp${i}Title` as keyof Resume] as string;
+              const expCompany = resume[`exp${i}Company` as keyof Resume] as string;
+              const expYear = resume[`exp${i}Year` as keyof Resume] as string;
+              const expDesc = resume[`exp${i}Desc` as keyof Resume] as string[];
+              return (
+                <div key={i} className="mt-3">
+                  <p className="font-medium">{expTitle} | {expCompany}</p>
+                  <p className="text-xs text-gray-500">{expYear}</p>
+                  <ul className="list-disc list-inside text-sm text-gray-700 mt-1">
+                    {(expDesc && expDesc.length > 0 ? expDesc : ["Describe your role..."]).map((desc, idx) => (
+                      <li key={idx}>{desc}</li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </section>
+        )}
+        {show.projects && (
+          <section>
+            <h2 className="text-lg font-semibold text-gray-800 border-b border-gray-300 pb-1">Projects</h2>
+            {[resume.project1, resume.project2].map((p, i) => (
+              <div key={i} className="mt-2">
+                <p className="font-medium">{p.title}</p>
+                <p className="text-sm">{p.desc}</p>
+              </div>
+            ))}
+          </section>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// --- Main ResumePreview Switcher ---
+export default function ResumePreview({ resume, show, template = 1 }: Props) {
+  if (template === 2) return <ResumeTemplate2 resume={resume} show={show} />;
+  if (template === 3) return <ResumeTemplate3 resume={resume} show={show} />;
+  return <ResumeTemplate1 resume={resume} show={show} />;
+}
+
+// --- Animation CSS ---
+// Add this to your global CSS (e.g., styles/globals.css):
+// .animate-fade-in { animation: fadeIn 0.7s cubic-bezier(0.4,0,0.2,1); }
+// @keyframes fadeIn { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: none;} }
